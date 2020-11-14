@@ -1,4 +1,4 @@
-package com.kimjinhwan.android.naverapi
+package com.kimjinhwan.android.naverapi.model
 
 data class Result(
 

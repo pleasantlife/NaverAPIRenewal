@@ -1,7 +1,7 @@
 package com.kimjinhwan.android.naverapi
 
+import com.kimjinhwan.android.naverapi.model.Result
 import io.reactivex.Single
-import okhttp3.ResponseBody
 import retrofit2.http.GET
 import retrofit2.http.Headers
 import retrofit2.http.Query
@@ -9,8 +9,8 @@ import retrofit2.http.Query
 interface APIService {
 
     @Headers(
-        "X-Naver-Client-Id: AAAAAAA",
-        "X-Naver-Client-Secret: *******"
+        "X-Naver-Client-Id: OzYyCwp8a0JpBJiKXycC",
+        "X-Naver-Client-Secret: SszZOHXjYS"
     )
     @GET("shop.json")
     fun getResult(@Query("query") query: String,

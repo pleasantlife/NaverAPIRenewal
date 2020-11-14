@@ -4,7 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    tools:context=".view.MainActivity"
+    android:id="@+id/mainLayout"
+    android:background="@color/white">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/topBar"
@@ -17,7 +19,7 @@
 
         <TextView
             android:id="@+id/appTitle"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_margin="16dp"
             android:textColor="#FFFFFF"
@@ -26,56 +28,121 @@
             android:textStyle="bold"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintBottom_toTopOf="@+id/queryEditTxt"/>
+            app:layout_constraintRight_toLeftOf="@+id/menuBtn"
+            app:layout_constraintBottom_toTopOf="@+id/editTextLayout"/>
 
-        <EditText
-            android:id="@+id/queryEditTxt"
+        <ImageView
+            android:id="@+id/menuBtn"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:padding="8dp"
+            android:layout_marginEnd="8dp"
+            android:src="@drawable/ic_menu_white_24dp"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/appTitle"
+            app:layout_constraintBottom_toBottomOf="@id/appTitle"/>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/editTextLayout"
             android:layout_width="0dp"
             android:layout_height="48dp"
-            android:layout_marginTop="8dp"
-            android:padding="8dp"
-            android:hint="input text"
-            android:imeOptions="actionSend"
-            android:singleLine="true"
-            android:lines="1"
-            android:maxLines="1"
-            android:background="#FFFFFF"
-            android:layout_margin="4dp"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toLeftOf="@+id/searchBtn"
+            android:background="@color/white"
+            android:layout_marginTop="24dp"
+            android:layout_marginStart="16dp"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/appTitle"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintHorizontal_weight="1"/>
+            app:layout_constraintEnd_toStartOf="@+id/searchBtn"
+            app:layout_constraintHorizontal_weight="1">
+
+            <EditText
+                android:id="@+id/queryEditTxt"
+                android:layout_width="0dp"
+                android:layout_height="48dp"
+                android:padding="4dp"
+                android:inputType="text"
+                android:hint="@string/input_text"
+                android:imeOptions="actionSearch"
+                android:singleLine="true"
+                android:lines="1"
+                android:maxLines="1"
+                android:background="#FFFFFF"
+                android:layout_margin="4dp"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/clearTxtBtn"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintHorizontal_weight="1"
+                />
+
+            <ImageView
+                android:id="@+id/clearTxtBtn"
+                android:layout_width="0dp"
+                android:layout_height="48dp"
+                android:src="@drawable/ic_clear_black_24dp"
+                android:paddingLeft="4dp"
+                android:paddingRight="4dp"
+                android:paddingTop="16dp"
+                android:paddingBottom="16dp"
+                android:visibility="gone"
+                app:layout_constraintHorizontal_weight="0.2"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/queryEditTxt"
+                app:layout_constraintEnd_toEndOf="parent"/>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
         <ImageView
             android:id="@+id/searchBtn"
             android:layout_width="0dp"
             android:layout_height="60dp"
             android:padding="8dp"
             android:src="@drawable/ic_search_white_24dp"
-            app:layout_constraintTop_toTopOf="@+id/queryEditTxt"
-            app:layout_constraintBottom_toBottomOf="@+id/queryEditTxt"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintLeft_toRightOf="@+id/queryEditTxt"
+            app:layout_constraintTop_toTopOf="@+id/editTextLayout"
+            app:layout_constraintBottom_toBottomOf="@+id/editTextLayout"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/editTextLayout"
             app:layout_constraintHorizontal_weight="0.2"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <TextView
-        android:id="@+id/lowestPriceTxt"
-        android:layout_width="match_parent"
+        android:id="@+id/lowestPriceTitle"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="최저가: "
-        app:layout_constraintTop_toBottomOf="@+id/topBar" />
+        android:text="@string/lowest_price"
+        android:layout_margin="16dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/lowestPriceTxt"
+        app:layout_constraintBottom_toBottomOf="@+id/lowestPriceTxt"/>
+
+    <TextView
+        android:id="@+id/lowestPriceTxt"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:text="0"
+        android:textSize="24dp"
+        android:textStyle="bold"
+        android:textColor="@color/colorPrimary"
+        android:textAlignment="viewEnd"
+        app:layout_constraintTop_toBottomOf="@+id/topBar"
+        app:layout_constraintLeft_toRightOf="@+id/lowestPriceTitle"
+        app:layout_constraintRight_toRightOf="parent"/>
 
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/resultRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:layout_marginTop="8dp"
         app:layout_constraintTop_toBottomOf="@+id/lowestPriceTxt"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"/>
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layoutAnimation="@anim/anim_recycler_item"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

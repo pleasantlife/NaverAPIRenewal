@@ -1,7 +1,8 @@
 package com.kimjinhwan.android.naverapi.di
 
 import android.content.Context
-import com.kimjinhwan.android.naverapi.MainActivity
+import com.kimjinhwan.android.naverapi.view.DetailActivity
+import com.kimjinhwan.android.naverapi.view.MainActivity
 import dagger.BindsInstance
 import dagger.Component
 import javax.inject.Singleton
@@ -16,4 +17,5 @@ interface AppComponent {
     }
 
     fun inject(activity: MainActivity)
+    fun inject(activity: DetailActivity)
 }
