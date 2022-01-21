@@ -7,7 +7,8 @@ import com.kimjinhwan.android.naverapi.viewmodel.MainActivityViewModel
 import javax.inject.Inject
 
 class MainViewModelFactory @Inject constructor(private val resultDataRepository: ResultDataRepository): ViewModelProvider.Factory {
-    override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+
+    override fun <T : ViewModel> create(modelClass: Class<T>): T {
         return MainActivityViewModel(
             resultDataRepository
         ) as T

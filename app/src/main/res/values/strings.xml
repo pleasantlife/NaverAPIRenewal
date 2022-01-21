@@ -40,4 +40,11 @@
         \n\n8. Limitation of Liability. In no event and under no legal theory, whether in tort (including negligence), contract, or otherwise, unless required by applicable law (such as deliberate and grossly negligent acts) or agreed to in writing, shall any Contributor be liable to You for damages, including any direct, indirect, special, incidental, or consequential damages of any character arising as a result of this License or out of the use or inability to use the Work (including but not limited to damages for loss of goodwill, work stoppage, computer failure or malfunction, or any and all other commercial damages or losses), even if such Contributor has been advised of the possibility of such damages.
         \n\n9. Accepting Warranty or Additional Liability. While redistributing the Work or Derivative Works thereof, You may choose to offer, and charge a fee for, acceptance of support, warranty, indemnity, or other liability obligations and/or rights consistent with this License. However, in accepting such obligations, You may act only on Your own behalf and on Your sole responsibility, not on behalf of any other Contributor, and only if You agree to indemnify, defend, and hold each Contributor harmless for any liability incurred by, or claims asserted against, such Contributor by reason of your accepting any such warranty or additional liability.
         \n\nEND OF TERMS AND CONDITIONS</string>
+    <string name="glide_license" translatable="false">https://github.com/bumptech/glide\n\nCopyright 2014 Google, Inc.\nApache License 2.0</string>
+    <string name="retrofit_license" translatable="false">https://square.github.io/retrofit\n\nCopyright 2013 Square, Inc.\nApache License 2.0</string>
+    <string name="dagger_license" translatable="false">https://github.com/google/dagger\n\nCopyright 2012 The Dagger Authors\nApache License 2.0</string>
+    <string name="remove_all">Are you sure you want to delete all items?</string>
+    <string name="no_item">No saved items.</string>
+    <string name="redirect_naver_link" translatable="false">https://msearch.shopping.naver.com/catalog/%1s</string>
+    <string name="redirect_other_mall_link" translatable="false">https://msearch.shopping.naver.com/product/%1s</string>
 </resources>

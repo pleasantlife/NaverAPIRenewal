@@ -16,8 +16,8 @@ interface ProductDao {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     fun insert(resultItem: ResultItem)
 
-    @Delete
-    fun delete(resultItem: ResultItem)
+    @Query("DELETE FROM resultItem WHERE productId = :productId")
+    fun delete(productId: String)
 
     @Query("DELETE FROM resultItem")
     fun deleteAll()

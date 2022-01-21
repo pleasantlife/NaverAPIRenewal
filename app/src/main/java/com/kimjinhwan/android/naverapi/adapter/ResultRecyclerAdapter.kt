@@ -60,8 +60,8 @@ class ResultRecyclerAdapter(private val context: Context): PagedListAdapter<Resu
                 item.title
                 .replace("<b>", "")
                 .replace("</b>", "")
-            itemView.priceTxt.text = context.getString(R.string.won, numberFormat.format(item.lprice))
-            if(item.lprice == lowestPrice){
+            itemView.priceTxt.text = context.getString(R.string.won, numberFormat.format(item.lprice.toLong()))
+            if(item.lprice.toLong() == lowestPrice){
                 itemView.priceTxt.setTextColor(ContextCompat.getColor(context,
                     R.color.colorPrimary
                 ))
@@ -73,7 +73,6 @@ class ResultRecyclerAdapter(private val context: Context): PagedListAdapter<Resu
             itemView.setOnClickListener {
                 val intent = Intent(context, DetailActivity::class.java)
                 intent.putExtra("item", item)
-                intent.putExtra("type", "normal")
                 context.startActivity(intent)
             }
         }

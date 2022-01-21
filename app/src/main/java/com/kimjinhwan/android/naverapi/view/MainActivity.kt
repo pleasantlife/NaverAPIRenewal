@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.KeyEvent
 import android.view.MenuInflater
 import android.view.View
@@ -35,7 +36,7 @@ class MainActivity : AppCompatActivity() {
     @Inject
     lateinit var resultDataRepository: ResultDataRepository
     private lateinit var viewModel: MainActivityViewModel
-    private val resultRecyclerAdapter =
+    private var resultRecyclerAdapter =
         ResultRecyclerAdapter(this)
 
     private var pressedTime: Long = 0
@@ -47,6 +48,8 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         window.statusBarColor = ContextCompat.getColor(this, R.color.colorPrimary)
 
+        lowestPriceTxt.text = getString(R.string.won, "0")
+
         setViewModelProvider()
 
         resultRecyclerView.apply {
@@ -57,9 +60,9 @@ class MainActivity : AppCompatActivity() {
 
 
         viewModel.searchResult.observe(this, Observer {
-            resultRecyclerAdapter.submitList(it)
-            setLowestPrice()
-            resultRecyclerView.scheduleLayoutAnimation()
+                resultRecyclerAdapter.submitList(it)
+                setLowestPrice()
+                resultRecyclerView.scheduleLayoutAnimation()
         })
 
         searchBtn.setOnClickListener {
@@ -85,6 +88,12 @@ class MainActivity : AppCompatActivity() {
                 "LOADING" -> {
                     if(!snackBar.isShown){
                         snackBar.show()
+                    }
+                }
+                "EMPTY" -> {
+                    lowestPriceTxt.text = getString(R.string.won, "0")
+                    if(snackBar.isShown) {
+                        snackBar.dismiss()
                     }
                 }
                 else -> {
@@ -120,8 +129,7 @@ class MainActivity : AppCompatActivity() {
             MainViewModelFactory(
                 resultDataRepository
             )
-        )
-            .get(MainActivityViewModel::class.java)
+        )[MainActivityViewModel::class.java]
     }
 
     private fun showPopup(v : View){
@@ -157,9 +165,11 @@ class MainActivity : AppCompatActivity() {
         if(query.isNotEmpty()) {
             val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
             imm.hideSoftInputFromWindow(queryEditTxt.windowToken, 0)
-            viewModel.setQuery(queryEditTxt.text.toString())
+            if(viewModel.networkState.value != "LOADING") {
+                viewModel.setQuery(queryEditTxt.text.toString())
+            }
         } else {
-            Toast.makeText(this, getString(R.string.empty_keyword), Toast.LENGTH_SHORT).show()
+            Snackbar.make(mainLayout, getString(R.string.empty_keyword), Snackbar.LENGTH_SHORT).show()
         }
     }
 

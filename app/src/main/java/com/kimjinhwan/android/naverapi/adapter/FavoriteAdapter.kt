@@ -27,14 +27,13 @@ class FavoriteAdapter(private val context: Context): RecyclerView.Adapter<Favori
                 item.title
                     .replace("<b>", "")
                     .replace("</b>", "")
-            itemView.priceTxt.text = context.getString(R.string.won, numberFormat.format(item.lprice))
+            itemView.priceTxt.text = context.getString(R.string.won, numberFormat.format(item.lprice.toLong()))
             itemView.priceTxt.setTextColor(ContextCompat.getColor(context,
                 R.color.black
             ))
             itemView.setOnClickListener {
                 val intent = Intent(context, DetailActivity::class.java)
                 intent.putExtra("item", item)
-                intent.putExtra("type", "favorite")
                 context.startActivity(intent)
             }
         }

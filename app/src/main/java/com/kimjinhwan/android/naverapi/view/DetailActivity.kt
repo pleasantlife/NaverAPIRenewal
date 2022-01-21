@@ -4,11 +4,8 @@ import android.content.Intent
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.widget.Toast
-import android.widget.Toast.makeText
 import androidx.core.content.ContextCompat
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
 import com.google.android.material.snackbar.Snackbar
@@ -54,11 +51,11 @@ class DetailActivity : AppCompatActivity() {
         btnSave.setOnClickListener {
             if(isSavedItem) {
                 viewModel.deleteItem(item!!)
-                Snackbar.make(detailLayout, getString(R.string.remove_complete), Snackbar.LENGTH_SHORT).show()
+                Toast.makeText(this, getString(R.string.remove_complete), Toast.LENGTH_SHORT).show()
                 onBackPressed()
             } else {
                 viewModel.insertItem(item!!)
-                Snackbar.make(detailLayout, getString(R.string.insert_complete), Snackbar.LENGTH_SHORT).show()
+                Toast.makeText(this, getString(R.string.insert_complete), Toast.LENGTH_SHORT).show()
                 isSavedItem = true
                 setSaveBtnTxt()
             }
@@ -70,11 +67,11 @@ class DetailActivity : AppCompatActivity() {
         Glide.with(this).load(item.image).into(detailImage)
         mallNameTxt.text = item.mallName
         productTxt.text = item.title.replace("<b>","").replace("</b>","")
-        val formattedPrice = NumberFormat.getInstance(Locale.getDefault()).format(item.lprice)
+        val formattedPrice = NumberFormat.getInstance(Locale.getDefault()).format(item.lprice.toLong())
         lowestPriceTxt.text = getString(R.string.won, formattedPrice)
         btnMove.setOnClickListener {
             val intent = Intent(Intent.ACTION_VIEW)
-            intent.data = Uri.parse(item.link)
+            intent.data = Uri.parse(checkLink(item.productId, item.mallName))
             startActivity(intent)
         }
 
@@ -83,11 +80,19 @@ class DetailActivity : AppCompatActivity() {
 
     }
 
-    private fun setSaveBtnTxt(){
+    private fun setSaveBtnTxt() {
         if(isSavedItem){
             btnSave.text = getString(R.string.remove)
         } else {
             btnSave.text = getString(R.string.save)
+        }
+    }
+
+    private fun checkLink(productId: String, mallName: String): String {
+        return if(mallName == "네이버") {
+            getString(R.string.redirect_naver_link, productId)
+        } else {
+            getString(R.string.redirect_other_mall_link, productId)
         }
     }
 }

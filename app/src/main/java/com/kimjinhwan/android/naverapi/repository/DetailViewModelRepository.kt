@@ -25,7 +25,7 @@ class DetailViewModelRepository(application: Application) : CoroutineScope {
 
     fun deleteItem(resultItem: ResultItem) {
         launch {
-            productDao.delete(resultItem)
+            productDao.delete(resultItem.productId)
         }
     }
 

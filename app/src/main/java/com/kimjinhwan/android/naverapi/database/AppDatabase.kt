@@ -7,7 +7,7 @@ import androidx.room.RoomDatabase
 import com.kimjinhwan.android.naverapi.dao.ProductDao
 import com.kimjinhwan.android.naverapi.model.ResultItem
 
-@Database(entities = [ResultItem::class], version = 1)
+@Database(entities = [ResultItem::class], version = 2)
 abstract class AppDatabase: RoomDatabase() {
 
     abstract fun productDao(): ProductDao

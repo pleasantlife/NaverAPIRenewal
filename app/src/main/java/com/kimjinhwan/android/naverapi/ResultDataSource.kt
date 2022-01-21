@@ -1,6 +1,5 @@
 package com.kimjinhwan.android.naverapi
 
-import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.paging.PositionalDataSource
 import com.kimjinhwan.android.naverapi.model.ResultItem
@@ -19,24 +18,28 @@ class ResultDataSource @Inject constructor(private val apiService: APIService,
     val networkState = MutableLiveData<String>()
     private var price = Long.MAX_VALUE
 
+    fun resetPrice() {
+        price = Long.MAX_VALUE
+    }
+
     override fun loadInitial(params: LoadInitialParams, callback: LoadInitialCallback<ResultItem>) {
         networkState.postValue("LOADING")
         startValue = 1
         lowestPrice.postValue(Long.MAX_VALUE)
-        price = Long.MAX_VALUE
-        Log.e("price::", "${price}")
+        resetPrice()
         apiService.getResult(query, PAGED_SIZE, startValue).subscribeOn(Schedulers.io()).subscribe({
             it.items.forEach{ item ->
-                if(item.lprice < price) {
-                    price = item.lprice
+                if(item.lprice.toLong() < price) {
+                    price = item.lprice.toLong()
                 }
                 lowestPrice.postValue(price)
             }
-
-            Log.e("getValue1::", "${lowestPrice.value}")
-            Log.e("pageInit::", "${it.start}")
             callback.onResult(it.items, 0, it.total)
-            networkState.postValue("IDLE")
+            if(it.items.isNotEmpty()) {
+                networkState.postValue("IDLE")
+            } else {
+                networkState.postValue("EMPTY")
+            }
         },{
             networkState.postValue("ERROR")
         })
@@ -49,9 +52,8 @@ class ResultDataSource @Inject constructor(private val apiService: APIService,
             apiService.getResult(query, PAGED_SIZE, startValue).subscribeOn(Schedulers.io())
                 .subscribe({
                     it.items.forEach{ item ->
-                        if(item.lprice < price) {
-                            price = item.lprice
-                            Log.e("hihihi!:::", "${price}")
+                        if(item.lprice.toLong() < price) {
+                            price = item.lprice.toLong()
                         }
                         lowestPrice.postValue(price)
                     }
