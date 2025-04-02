@@ -12,9 +12,9 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.kimjinhwan.android.naverapi.R
+import com.kimjinhwan.android.naverapi.databinding.RecyclerItemBinding
 import com.kimjinhwan.android.naverapi.model.ResultItem
 import com.kimjinhwan.android.naverapi.view.DetailActivity
-import kotlinx.android.synthetic.main.recycler_item.view.*
 import java.text.NumberFormat
 
 class ResultRecyclerAdapter(private val context: Context): PagedListAdapter<ResultItem, ResultRecyclerAdapter.ResultHolder>(
@@ -35,7 +35,7 @@ class ResultRecyclerAdapter(private val context: Context): PagedListAdapter<Resu
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ResultHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.recycler_item, parent, false)
+        val view = RecyclerItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return ResultHolder(view)
     }
 
@@ -47,7 +47,7 @@ class ResultRecyclerAdapter(private val context: Context): PagedListAdapter<Resu
         lowestPrice = price
     }
 
-    inner class ResultHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
+    inner class ResultHolder(private val binding: RecyclerItemBinding): RecyclerView.ViewHolder(binding.root) {
 
         private val numberFormat = NumberFormat.getInstance()
         private val animation = AnimationUtils.loadAnimation(context, R.anim.up_from_bottom)
@@ -55,18 +55,18 @@ class ResultRecyclerAdapter(private val context: Context): PagedListAdapter<Resu
 
         fun bind(item: ResultItem) {
             itemView.startAnimation(animation)
-            Glide.with(context).load(item.image).into(itemView.itemImage)
-            itemView.titleTxt.text =
+            Glide.with(context).load(item.image).into(binding.itemImage)
+            binding.titleTxt.text =
                 item.title
                 .replace("<b>", "")
                 .replace("</b>", "")
-            itemView.priceTxt.text = context.getString(R.string.won, numberFormat.format(item.lprice.toLong()))
+            binding.priceTxt.text = context.getString(R.string.won, numberFormat.format(item.lprice.toLong()))
             if(item.lprice.toLong() == lowestPrice){
-                itemView.priceTxt.setTextColor(ContextCompat.getColor(context,
+                binding.priceTxt.setTextColor(ContextCompat.getColor(context,
                     R.color.colorPrimary
                 ))
             } else {
-                itemView.priceTxt.setTextColor(ContextCompat.getColor(context,
+                binding.priceTxt.setTextColor(ContextCompat.getColor(context,
                     R.color.black
                 ))
             }

@@ -2,8 +2,8 @@ package com.kimjinhwan.android.naverapi.viewmodel
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.switchMap
 import androidx.paging.PagedList
 import com.kimjinhwan.android.naverapi.repository.ResultDataRepository
 import com.kimjinhwan.android.naverapi.model.ResultItem
@@ -17,19 +17,19 @@ class MainActivityViewModel @Inject constructor(private val resultDataRepository
     }
 
     val searchResult: LiveData<PagedList<ResultItem>> by lazy {
-        Transformations.switchMap(queryLiveData) {
+        queryLiveData.switchMap {
             resultDataRepository.getResult(it)
         }
     }
 
     val lowestPrice: LiveData<Long> by lazy {
-        Transformations.switchMap(queryLiveData) {
+        queryLiveData.switchMap {
             resultDataRepository.getLowestPrice()
         }
     }
 
     val networkState: LiveData<String> by lazy {
-        Transformations.switchMap(queryLiveData) {
+        queryLiveData.switchMap {
             resultDataRepository.getNetworkState()
         }
     }

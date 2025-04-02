@@ -1,13 +1,11 @@
 package com.kimjinhwan.android.naverapi.repository
 
-import android.util.Log
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.Transformations
+import androidx.lifecycle.switchMap
 import androidx.paging.LivePagedListBuilder
 import androidx.paging.PagedList
 import com.kimjinhwan.android.naverapi.APIService
 import com.kimjinhwan.android.naverapi.ResultDataFactory
-import com.kimjinhwan.android.naverapi.ResultDataSource
 import com.kimjinhwan.android.naverapi.ResultDataSource.Companion.PAGED_SIZE
 import com.kimjinhwan.android.naverapi.model.ResultItem
 import javax.inject.Inject
@@ -27,14 +25,20 @@ class ResultDataRepository @Inject constructor(private val apiService: APIServic
     }
 
     fun getLowestPrice(): LiveData<Long> {
-        return Transformations.switchMap(
-            resultDataFactory.resultDataSource, ResultDataSource::lowestPrice
-        )
+//        return Transformations.switchMap(
+//            resultDataFactory.resultDataSource, ResultDataSource::lowestPrice
+//        )
+        return resultDataFactory.resultDataSource.switchMap { data ->
+            data.lowestPrice
+        }
     }
 
     fun getNetworkState(): LiveData<String> {
-        return Transformations.switchMap(
-            resultDataFactory.resultDataSource, ResultDataSource::networkState
-        )
+        return resultDataFactory.resultDataSource.switchMap { data ->
+            data.networkState
+        }
+//        return Transformations.switchMap(
+//            resultDataFactory.resultDataSource, ResultDataSource::networkState
+//        )
     }
 }

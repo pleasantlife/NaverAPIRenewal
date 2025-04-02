@@ -2,6 +2,7 @@ package com.kimjinhwan.android.naverapi.view
 
 import android.content.Context
 import android.content.Intent
+import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.Editable
@@ -10,21 +11,26 @@ import android.util.Log
 import android.view.KeyEvent
 import android.view.MenuInflater
 import android.view.View
+import android.view.WindowInsets
+import android.view.WindowManager
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
-import android.widget.Toast
+import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.widget.PopupMenu
 import androidx.core.content.ContextCompat
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowCompat
+import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.snackbar.Snackbar
 import com.kimjinhwan.android.naverapi.*
 import com.kimjinhwan.android.naverapi.adapter.ResultRecyclerAdapter
+import com.kimjinhwan.android.naverapi.databinding.ActivityMainBinding
 import com.kimjinhwan.android.naverapi.repository.ResultDataRepository
 import com.kimjinhwan.android.naverapi.viewmodel.MainActivityViewModel
 import com.kimjinhwan.android.naverapi.viewmodelfactory.MainViewModelFactory
-import kotlinx.android.synthetic.main.activity_main.*
 import java.text.NumberFormat
 import java.util.*
 import javax.inject.Inject
@@ -41,18 +47,25 @@ class MainActivity : AppCompatActivity() {
 
     private var pressedTime: Long = 0
     private var seconds: Long = 0
+    private lateinit var binding: ActivityMainBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         (application as BaseApplication).appComponent.inject(this)
+        enableEdgeToEdge()
+        setupWindowInsets()
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
-        window.statusBarColor = ContextCompat.getColor(this, R.color.colorPrimary)
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
+        window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
+        window.statusBarColor = Color.TRANSPARENT
+        //window.statusBarColor = ContextCompat.getColor(this, R.color.colorPrimary)
 
-        lowestPriceTxt.text = getString(R.string.won, "0")
+        binding.lowestPriceTxt.text = getString(R.string.won, "0")
 
         setViewModelProvider()
 
-        resultRecyclerView.apply {
+        binding.resultRecyclerView.apply {
             layoutManager = LinearLayoutManager(this@MainActivity)
             adapter = resultRecyclerAdapter
         }
@@ -62,23 +75,23 @@ class MainActivity : AppCompatActivity() {
         viewModel.searchResult.observe(this, Observer {
                 resultRecyclerAdapter.submitList(it)
                 setLowestPrice()
-                resultRecyclerView.scheduleLayoutAnimation()
+                binding.resultRecyclerView.scheduleLayoutAnimation()
         })
 
-        searchBtn.setOnClickListener {
+        binding.searchBtn.setOnClickListener {
             checkSearch()
         }
 
-        menuBtn.setOnClickListener {
+        binding.menuBtn.setOnClickListener {
             showPopup(it)
         }
 
-        clearTxtBtn.setOnClickListener {
-            queryEditTxt.text.clear()
+        binding.clearTxtBtn.setOnClickListener {
+            binding.queryEditTxt.text.clear()
         }
 
         viewModel.networkState.observe(this, Observer {
-            val snackBar = Snackbar.make(mainLayout, getString(R.string.load_more), Snackbar.LENGTH_SHORT)
+            val snackBar = Snackbar.make(binding.mainLayout, getString(R.string.load_more), Snackbar.LENGTH_SHORT)
             when (it) {
                 "ERROR" -> {
                     if(snackBar.isShown){
@@ -91,7 +104,7 @@ class MainActivity : AppCompatActivity() {
                     }
                 }
                 "EMPTY" -> {
-                    lowestPriceTxt.text = getString(R.string.won, "0")
+                    binding.lowestPriceTxt.text = getString(R.string.won, "0")
                     if(snackBar.isShown) {
                         snackBar.dismiss()
                     }
@@ -104,7 +117,7 @@ class MainActivity : AppCompatActivity() {
             }
         })
 
-        queryEditTxt.setOnEditorActionListener { v, actionId, event ->
+        binding.queryEditTxt.setOnEditorActionListener { v, actionId, event ->
             return@setOnEditorActionListener when (actionId) {
                 EditorInfo.IME_ACTION_SEARCH -> {
                     checkSearch()
@@ -154,32 +167,33 @@ class MainActivity : AppCompatActivity() {
         viewModel.lowestPrice.observe(this, Observer { lowestPrice ->
             if(lowestPrice < Long.MAX_VALUE) {
                 val formattedPrice = NumberFormat.getInstance(Locale.getDefault()).format(lowestPrice)
-                lowestPriceTxt.text = getString(R.string.won, formattedPrice)
+                binding.lowestPriceTxt.text = getString(R.string.won, formattedPrice)
             }
             resultRecyclerAdapter.setLowestPrice(lowestPrice)
         })
     }
 
     private fun checkSearch(){
-        val query = queryEditTxt.text.toString()
+        val query = binding.queryEditTxt.text.toString()
+        Log.d("Search::::", query)
         if(query.isNotEmpty()) {
             val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-            imm.hideSoftInputFromWindow(queryEditTxt.windowToken, 0)
+            imm.hideSoftInputFromWindow(binding.queryEditTxt.windowToken, 0)
             if(viewModel.networkState.value != "LOADING") {
-                viewModel.setQuery(queryEditTxt.text.toString())
+                viewModel.setQuery(binding.queryEditTxt.text.toString())
             }
         } else {
-            Snackbar.make(mainLayout, getString(R.string.empty_keyword), Snackbar.LENGTH_SHORT).show()
+            Snackbar.make(binding.mainLayout, getString(R.string.empty_keyword), Snackbar.LENGTH_SHORT).show()
         }
     }
 
     private fun setTextChangeListener() {
-        queryEditTxt.addTextChangedListener(object: TextWatcher{
+        binding.queryEditTxt.addTextChangedListener(object: TextWatcher{
             override fun afterTextChanged(s: Editable?) {
                 if(s.toString().isEmpty()){
-                    clearTxtBtn.visibility = View.GONE
+                    binding.clearTxtBtn.visibility = View.GONE
                 } else {
-                    clearTxtBtn.visibility = View.VISIBLE
+                    binding.clearTxtBtn.visibility = View.VISIBLE
                 }
             }
 
@@ -194,8 +208,9 @@ class MainActivity : AppCompatActivity() {
         })
     }
 
+    @Deprecated("Deprecated in Java")
     override fun onBackPressed() {
-        val backPressedSnackBar = Snackbar.make(mainLayout, getString(R.string.backpressed_message), Snackbar.LENGTH_SHORT)
+        val backPressedSnackBar = Snackbar.make(binding.mainLayout, getString(R.string.backpressed_message), Snackbar.LENGTH_SHORT)
         if(pressedTime == 0L){
             if(!backPressedSnackBar.isShown){
                 backPressedSnackBar.show()
@@ -213,6 +228,17 @@ class MainActivity : AppCompatActivity() {
                 super.onBackPressed()
                 finish()
             }
+        }
+    }
+
+    private fun setupWindowInsets() {
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(android.R.id.content)) {
+            view, insets ->
+            val statusBar = WindowInsetsCompat.Type.statusBars()
+            view.setBackgroundColor(ContextCompat.getColor(this, R.color.colorPrimary))
+            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            view.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
+            insets
         }
     }
 }

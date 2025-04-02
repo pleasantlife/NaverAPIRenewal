@@ -9,8 +9,8 @@ import retrofit2.http.Query
 interface APIService {
 
     @Headers(
-        "X-Naver-Client-Id: OzYyCwp8a0JpBJiKXycC",
-        "X-Naver-Client-Secret: SszZOHXjYS"
+        "X-Naver-Client-Id: ${BuildConfig.NAVER_CLIENT_ID}",
+        "X-Naver-Client-Secret: ${BuildConfig.NAVER_CLIENT_SECRET}"
     )
     @GET("shop.json")
     fun getResult(@Query("query") query: String,
